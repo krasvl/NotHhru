@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using NotHhru.ViewModels;
 
 namespace NotHhru.Controllers
 {
@@ -26,21 +27,22 @@ namespace NotHhru.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult Index(int currentPage = 1)
+        public IActionResult Index()
         {
-            ViewBag.currentPage = currentPage;
             if (db.Ads.Count() == 0)
             {
                 CreateData();
             }
-            IQueryable<Ad> ads = db.Ads;
-            return View(ads);
+            int companiesCount = db.Companies.Count();
+            ViewBag.companiesCount = companiesCount;
+            int adsCount = db.Ads.Count();
+            ViewBag.adsCount = adsCount;
+            return View(new IndexViewModel(
+                db.Ads.Include(a => a.Company).Include(a => a.Region).Include(a => a.WorkType).OrderByDescending(a => a.Date).ToList(), 
+                db.Companies.Include(c => c.Ads).OrderByDescending(c => c.Ads.Count).ToList()));
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+
 
         [NonAction]
         private void CreateData()
@@ -55,7 +57,7 @@ namespace NotHhru.Controllers
             List<Company> companies = new List<Company>();
             for (int i = 0; i < 50; i++)
             {
-                companies.Add(new Company() { Name = $"Кампания {i + 1}" });
+                companies.Add(new Company() { Name = $"Компания {i + 1}" });
             }
             db.Companies.AddRange(companies);
 
