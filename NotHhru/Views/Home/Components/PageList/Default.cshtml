@@ -1,0 +1,125 @@
+﻿@model NotHhru.ViewModels.PageListViewModel
+
+@{
+    string controller = Model.Controller;
+    string action = Model.Action;
+}
+
+<div class="row justify-content-center">
+    <div class="col-6 row justify-content-center">
+        @if (Model.LastPage < 9)
+        {
+            for (int i = 1; i <= Model.LastPage; i++)
+            {
+                <a asp-controller="@controller"
+                   asp-action="@action"
+                   asp-route-currentPage="@i"
+                   class="col-1 btn m-1
+                   @if (Model.IsSelect(i))
+                   {
+                       @:btn-outline-success
+                   }
+                   else
+                   {
+                       @:btn-outline-dark
+                   }
+                   ">
+                    @i
+                </a>
+            }
+        }
+        else
+        {
+            @if (Model.CurrentPage - 5 < 0)
+            {
+                for (int i = 1; i <= 9; i++)
+                {
+                    <a asp-controller="@controller"
+                       asp-action="@action"
+                       asp-route-currentPage="@i"
+                       class="col-1 btn m-1
+                           @if (Model.IsSelect(i))
+                           {
+                               @:btn-outline-success
+                           }
+                           else
+                           {
+                               @:btn-outline-dark
+                           }
+                           ">
+                        @i
+                    </a>
+                }
+                <a asp-controller="@controller"
+                   asp-action="@action"
+                   asp-route-currentPage="@Model.LastPage"
+                   class="col-1 m-1 btn btn-outline-dark">
+                    @Model.LastPage
+                </a>
+            }
+            else if (Model.CurrentPage + 5 > Model.LastPage)
+            {
+                <a asp-controller="@controller"
+                   asp-action="@action"
+                   asp-route-currentPage="1"
+                   class="col-1 btn-outline-dark btn m-1">
+                    1
+                </a>
+                for (int i = Model.LastPage - 8; i <= Model.LastPage; i++)
+                {
+                    <a asp-controller="@controller"
+                       asp-action="@action"
+                       asp-route-currentPage="@i"
+                       class="col-1 btn m-1
+                           @if (Model.IsSelect(i))
+                           {
+                               @:btn-outline-success
+                           }
+                           else
+                           {
+                               @:btn-outline-dark
+                           }
+                           ">
+                        @i
+                    </a>
+                }
+
+            }
+            else
+            {
+                <a asp-controller="@controller"
+                   asp-action="@action"
+                   asp-route-currentPage="1"
+                   class="col-1 btn m-1 btn-outline-dark">
+                    1
+                </a>
+                for (int i = Model.CurrentPage - 3; i <= Model.CurrentPage + 3; i++)
+                {
+                    <a asp-controller="@controller"
+                       asp-action="@action"
+                       asp-route-currentPage="@i"
+                       class="col-1 btn m-1
+                           @if (Model.IsSelect(i))
+                           {
+                               @:btn-outline-success
+                           }
+                           else
+                           {
+                               @:btn-outline-dark
+                           }
+                           ">
+                        @i
+                    </a>
+                }
+                <a asp-controller="@controller"
+                   asp-action="@action"
+                   asp-route-currentPage="@Model.LastPage"
+                   class="col-1 m-1 btn btn-outline-dark">
+                    @Model.LastPage
+                </a>
+            }
+
+
+        }
+    </div>
+</div>

@@ -1,0 +1,18 @@
+﻿@using NotHhru.Models;
+@using NotHhru.ViewModels;
+@model PageViewModel<Ad>
+@{ 
+    string action = ViewBag.action;
+    string controller = ViewBag.controller;
+}
+<div>
+    <ul>
+        @foreach (var ad in Model.GetElements())
+        {
+            <li>
+                @ad.Name;
+            </li>
+        }
+    </ul>
+    <vc:page-list controller="@controller" action="@action" current-page="@Model.CurrentPage" last-page="Model.LastPage"></vc:page-list>
+</div>

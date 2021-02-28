@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IQueryable<NotHhru.Models.Ad>
+
+<div class="text-center">
+    <vc:ad-list ads="@Model" page-size="200" current-page="ViewBag.currentPage" action="Index" controller="Home"></vc:ad-list>
+</div>
