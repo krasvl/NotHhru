@@ -6,26 +6,28 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-6 row justify-content-center">
+    <div class="col-7 row justify-content-center">
         @if (Model.LastPage < 9)
         {
             for (int i = 1; i <= Model.LastPage; i++)
             {
+            <div class="px-1 col-1">
                 <a asp-controller="@controller"
                    asp-action="@action"
                    asp-route-currentPage="@i"
-                   class="col-1 btn m-1
-                   @if (Model.IsSelect(i))
-                   {
-                       @:btn-outline-success
-                   }
-                   else
-                   {
-                       @:btn-outline-dark
-                   }
-                   ">
+                   class="btn
+                       @if (Model.IsSelect(i))
+                       {
+                           @:btn-outline-success
+                       }
+                       else
+                       {
+                           @:btn-outline-dark
+                       }
+                       ">
                     @i
                 </a>
+            </div>
             }
         }
         else
@@ -34,89 +36,103 @@
             {
                 for (int i = 1; i <= 9; i++)
                 {
+                <div class="px-1 col">
                     <a asp-controller="@controller"
                        asp-action="@action"
                        asp-route-currentPage="@i"
-                       class="col-1 btn m-1
-                           @if (Model.IsSelect(i))
-                           {
-                               @:btn-outline-success
-                           }
-                           else
-                           {
-                               @:btn-outline-dark
-                           }
-                           ">
+                       class="btn
+                       @if (Model.IsSelect(i))
+                       {
+                           @:btn-outline-success
+                       }
+                       else
+                       {
+                           @:btn-outline-dark
+                       }
+                       ">
                         @i
                     </a>
+                </div>
                 }
-                <a asp-controller="@controller"
+                <div class="px-1 col">
+                    <a asp-controller="@controller"
                    asp-action="@action"
                    asp-route-currentPage="@Model.LastPage"
-                   class="col-1 m-1 btn btn-outline-dark">
+                   class="btn btn-outline-dark">
                     @Model.LastPage
                 </a>
+                </div>
             }
             else if (Model.CurrentPage + 5 > Model.LastPage)
             {
-                <a asp-controller="@controller"
+                <div class="px-1 col">
+                    <a asp-controller="@controller"
                    asp-action="@action"
                    asp-route-currentPage="1"
-                   class="col-1 btn-outline-dark btn m-1">
+                   class="btn-outline-dark btn">
                     1
                 </a>
+                </div>
                 for (int i = Model.LastPage - 8; i <= Model.LastPage; i++)
                 {
+                <div class="px-1 col">
                     <a asp-controller="@controller"
                        asp-action="@action"
                        asp-route-currentPage="@i"
-                       class="col-1 btn m-1
-                           @if (Model.IsSelect(i))
-                           {
-                               @:btn-outline-success
-                           }
-                           else
-                           {
-                               @:btn-outline-dark
-                           }
-                           ">
+                       class="btn
+                       @if (Model.IsSelect(i))
+                       {
+                           @:btn-outline-success
+                       }
+                       else
+                       {
+                           @:btn-outline-dark
+                       }
+                       ">
                         @i
                     </a>
+                </div>
                 }
 
             }
             else
             {
-                <a asp-controller="@controller"
+                <div class="px-1 col">
+                    <a asp-controller="@controller"
                    asp-action="@action"
                    asp-route-currentPage="1"
-                   class="col-1 btn m-1 btn-outline-dark">
+                   class="btn btn-outline-dark">
                     1
                 </a>
+                </div>
                 for (int i = Model.CurrentPage - 3; i <= Model.CurrentPage + 3; i++)
                 {
+                <div class="px-1 col">
                     <a asp-controller="@controller"
                        asp-action="@action"
                        asp-route-currentPage="@i"
-                       class="col-1 btn m-1
-                           @if (Model.IsSelect(i))
-                           {
-                               @:btn-outline-success
-                           }
-                           else
-                           {
-                               @:btn-outline-dark
-                           }
-                           ">
+                       class="btn
+                       @if (Model.IsSelect(i))
+                       {
+                           @:btn-outline-success
+                       }
+                       else
+                       {
+                           @:btn-outline-dark
+                       }
+                       ">
                         @i
                     </a>
+                </div>
                 }
-                <a asp-controller="@controller"
+                <div class="px-1 col">
+                    <a asp-controller="@controller"
                    asp-action="@action"
                    asp-route-currentPage="@Model.LastPage"
-                   class="col-1 m-1 btn btn-outline-dark">
+                   class="btn btn-outline-dark">
                     @Model.LastPage
                 </a>
+                </div>
             }
 
 

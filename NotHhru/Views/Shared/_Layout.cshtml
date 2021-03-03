@@ -8,21 +8,16 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <div class="row pt-3 bg-light border-bottom border-success">
-            <div class="col-3 text-center text-dark">
-                <h4 class="">Название сайта</h4>
-            </div>
-            <div class="col-6">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Должность или компания" aria-describedby="button-addon2">
-                    <div class="input-group-append">
-                        <input class="btn btn-outline-success" type="submit" id="button-addon2" value="Найти">
-                    </div>
+    <header class="pt-3 bg-light border-bottom border-success">
+        <div class="container">
+            <div class="row pb-2">
+                <div class="col-3 text-center text-dark">
+                    <h4><a asp-action="Index" asp-controller="Home" class="text-decoration-none text-dark">Название сайта</a></h4>
                 </div>
-            </div>
-            <div class="col-3 text-center">
-                <a href="#" class="btn btn-outline-success">Войти</a>
+                <div class="col-9 row justify-content-end">
+                    <div class="col-3 px-3"><a asp-controller="Home" asp-action="GetResult" class="btn btn-outline-success">Найти работу</a></div>
+                    <div class="col-3 px-3"><a href="#" class="btn btn-outline-success">Войти</a></div>
+                </div>
             </div>
         </div>
     </header>

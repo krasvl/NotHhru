@@ -6,13 +6,33 @@
     string controller = ViewBag.controller;
 }
 <div>
-    <ul>
-        @foreach (var ad in Model.GetElements())
-        {
-            <li>
-                @ad.Name;
-            </li>
-        }
-    </ul>
+    @foreach (var ad in Model.GetElements())
+    {
+        <div class="p-1 text-decoration-none">
+            <div class="bg-light py-3 row justify-content-center">
+                <div class="col-11 row">
+                    <div class="col">
+                        <h5 class="text-success">@ad.Name</h5>
+                        <span class="badge bg-success">@ad.WorkType.Name</span>
+                    </div>
+                    <div class="col text-right ">
+                        <h5 class="text-dark">@ad.Salary руб.</h5>
+                    </div>
+                </div>
+                <div class="col-11 row py-2">
+                    <div class="col ">
+                        <div class="text-dark">@ad.Company.Name</div>
+                    </div>
+                    <div class="col text-right ">
+                        <div class="text-dark">@ad.Region.Name</div>
+                    </div>
+                </div>
+                <div class="col-10 text-right">
+                    <div class="text-success">@ad.Date.ToLongDateString()</div>
+                </div>
+            </div>
+        </div>
+    }
+
     <vc:page-list controller="@controller" action="@action" current-page="@Model.CurrentPage" last-page="Model.LastPage"></vc:page-list>
 </div>

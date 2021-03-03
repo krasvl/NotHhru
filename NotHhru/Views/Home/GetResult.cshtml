@@ -1,0 +1,89 @@
+﻿@model NotHhru.ViewModels.GetResultViewModel
+
+<div class="row">
+    <div class="col-3 row justify-content-center">
+        <form asp-controller="Home" asp-action="GetResult" method="post">
+            <div class="col-11 bg-light p-3">
+                <h6 class="text-dark p-2">Тип работы</h6>
+                @foreach (var w in Model.WorkTypes)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="workType" id="workType" value="@w.Id">
+                        <label class="form-check-label" for="workType">
+                            @w.Name
+                        </label>
+                    </div>
+                }
+
+                <h6 class="text-dark p-2">Регион</h6>
+                @for (int i = 0; i < ViewBag.countRegions; i++)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="region" id="region" value="@Model.Regions[i].Id">
+                        <label class="form-check-label" for="region">
+                            @Model.Regions[i].Name
+                        </label>
+                    </div>
+                }
+                @if (ViewBag.countRegions < Model.Regions.Count)
+                {
+                    <div class="text-center pt-2">
+                        <a asp-controller="Home" asp-action="GetResult"
+                           asp-route-countRegions="@(ViewBag.countRegions+5)" class="btn btn-outline-success">Ещё</a>
+                    </div>
+                }
+
+                <h6 class="text-dark p-2">Уровень дохода</h6>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="salary" id="salary" value="0">
+                    <label class="form-check-label" for="salary">
+                        Указан
+                    </label>
+                </div>
+                @for (int i = 1; i < 5; i++)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="salary" id="salary" value="@(i*60)">
+                        <label class="form-check-label" for="salary">
+                            От @(i*60) т.р.
+                        </label>
+                    </div>
+                }
+                <div class="text-center py-3">
+                    <input class="btn btn-outline-success" type="submit" value="Найти" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-9">
+        <div class="row">
+            @foreach (var c in Model.Categories)
+            {
+                <div class="col-4 p-2" style="font-size: 12px">
+                    <div class="p-1 bg-light">
+                        <div class="row">
+                            <div class="col-5 text-center"><h6 class="text-success">@c.Key</h6></div>
+                            <div class="col-5 text-center text-dark">@c.Value</div>
+                            <div class="col-2 text-center">
+                                <a asp-controller="Home" asp-action="GetResult" asp-route-deleteCategorie="@c.Key" class="text-decoration-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x text-success" viewBox="0 0 16 16">
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <form asp-controller="Home" asp-action="GetResult" method="post">
+            <div class="input-group mb-3">
+                <input type="text" name="name" class="form-control" placeholder="Найти среди выбранных категорий" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <input class="btn btn-outline-success" type="submit" id="button-addon2" value="Найти">
+                </div>
+            </div>
+        </form>
+        <vc:ad-list action="GetResult" controller="Home" ads="@Model.Ads" current-page="@ViewBag.currentPage" page-size="20"></vc:ad-list>  
+    </div>
+</div>
