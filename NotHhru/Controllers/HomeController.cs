@@ -124,12 +124,18 @@ namespace NotHhru.Controllers
             return View(model);
         }
 
-        [NonAction]
-        private bool IsEqual(int? par, int id)
+        public IActionResult AdPage(int id)
         {
-            if (par == null) return true;
-            else if (par == id) return true;
-            else return false;
+            return View(db.Ads.Include(a => a.Company).Include(a => a.WorkType).Include(a => a.Region).Where(a => a.Id == id).FirstOrDefault());
+        }
+
+        public IActionResult CompanyPage(int id, int currentPage = 1)
+        {
+            ViewBag.currentPage = currentPage;
+            var name = db.Companies.Where(c => c.Id == id).FirstOrDefault().Name;
+            var img = db.Companies.Where(c => c.Id == id).FirstOrDefault().Img;
+            var ads = db.Ads.Include(a => a.Company).Include(a => a.WorkType).Include(a => a.Region).Where(a => a.Company.Id == id);
+            return View(new CompanyPageViewModel(name, img, ads));
         }
 
         [NonAction]
@@ -145,7 +151,10 @@ namespace NotHhru.Controllers
             List<Company> companies = new List<Company>();
             for (int i = 0; i < 50; i++)
             {
-                companies.Add(new Company() { Name = $"Компания {i + 1}" });
+                companies.Add(new Company() { 
+                    Name = $"Компания {i + 1}",
+                    Img = "https://condenast-media.gcdn.co/ad/38d357e7d51be2efdc52453e1308fa3b.jpg/e2d6f5ce/o/w1023"
+                });
             }
             db.Companies.AddRange(companies);
 
@@ -163,11 +172,12 @@ namespace NotHhru.Controllers
                 ads.Add(new Ad()
                 {
                     Name = $"Объявление {i + 1}",
-                    Company = companies[new Random().Next(companies.Count() - 1)],
+                    Company = companies[new Random().Next(0, companies.Count())],
                     Region = regions[new Random().Next(regions.Count() - 1)],
                     Date = new DateTime(2020, new Random().Next(1, 12), new Random().Next(1, 28), new Random().Next(1, 24), 0, 0),
                     Salary = new Random().Next(10000, 500000),
-                    WorkType = workTypes[new Random().Next(workTypes.Count() - 1)]
+                    WorkType = workTypes[new Random().Next(workTypes.Count() - 1)],
+                    Description = "В частности, консультация с широким активом требует определения и уточнения направлений прогрессивного развития. Разнообразный и богатый опыт говорит нам, что понимание сути ресурсосберегающих технологий предполагает независимые способы реализации распределения внутренних резервов и ресурсов. Есть над чем задуматься: явные признаки победы институционализации рассмотрены исключительно в разрезе маркетинговых и финансовых предпосылок. Учитывая ключевые сценарии поведения, убеждённость некоторых оппонентов позволяет оценить значение новых предложений. И нет сомнений, что непосредственные участники технического прогресса объявлены нарушающими общечеловеческие нормы этики и морали. Разнообразный и богатый опыт говорит нам, что синтетическое тестирование является качественно новой ступенью как самодостаточных, так и внешне зависимых концептуальных решений. Как принято считать, диаграммы связей призывают нас к новым свершениям, которые, в свою очередь, должны быть призваны к ответу. Но базовые сценарии поведения пользователей неоднозначны и будут разоблачены. Повседневная практика показывает, что перспективное планирование способствует подготовке и реализации первоочередных требований. Интерактивные прототипы освещают чрезвычайно интересные особенности картины в целом, однако конкретные выводы, разумеется, преданы социально-демократической анафеме.",
                 });
             }
             db.Ads.AddRange(ads);

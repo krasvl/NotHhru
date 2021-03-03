@@ -18,12 +18,19 @@
 <div class="row pb-4">
     @for (int i = 0; i < 12; i++)
     {
-        <div class="col-2 p-2">
-            <a href="" class="text-decoration-none">
+        <div class="col-3 p-2">
+            <a asp-action="AdPage" asp-controller="Home" asp-route-id="@Model.Ads[i].Id" class="text-decoration-none">
                 <div class="card">
                     <div class="card-body text-dark">
-                        <h5 class="card-title text-success">@Model.Ads[i].Name</h5>
-                        <p class="card-text">@Model.Ads[i].Name</p>
+                        <div class="row">
+                            <div class="col-7">
+                                <h5 class="card-title text-success">@Model.Ads[i].Name</h5>
+                                <p class="card-text">@Model.Ads[i].WorkType.Name</p>
+                            </div>
+                            <div class="col-5">
+                                <img src="@Model.Ads[i].Company.Img" class="rounded-circle" style="width:100px;height:100px;" />
+                            </div>
+                        </div>
                         <p class="card-text text-success">@Model.Ads[i].Salary руб.</p>
                         <p class="card-text">@Model.Ads[i].Region.Name</p>
                         <p class="card-text">@Model.Ads[i].Company.Name</p>
@@ -38,12 +45,17 @@
 <div class="row pb-4">
     @for (int i = 0; i < 12; i++)
     {
-        <div class="col-2 p-2">
-            <a href="" class="text-decoration-none">
+        <div class="col-3 p-2">
+            <a asp-controller="Home" asp-action="CompanyPage" asp-route-id="@Model.Companies[i].Id" class="text-decoration-none">
                 <div class="card">
-                    <div class="card-body text-dark">
-                        <h5 class="card-title text-success">@Model.Companies[i].Name</h5>
-                        <p class="card-text">@Model.Companies[i].Ads.Count вакансий</p>
+                    <div class="row card-body text-dark">
+                        <div class="col-8">
+                            <h5 class="card-title text-success">@Model.Companies[i].Name</h5>
+                            <p class="card-text">@Model.Companies[i].Ads.Count вакансий</p>
+                        </div>
+                        <div class="col-4">
+                            <img src="@Model.Ads[i].Company.Img" class="rounded-circle" style="width:80px;height:80px;" />
+                        </div>
                     </div>
                 </div>
             </a>

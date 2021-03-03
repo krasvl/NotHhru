@@ -4,10 +4,12 @@
 @{ 
     string action = ViewBag.action;
     string controller = ViewBag.controller;
+    int pageicoSize = ViewBag.pageicoSize;
 }
 <div>
     @foreach (var ad in Model.GetElements())
     {
+    <a asp-action="AdPage" asp-controller="Home" asp-route-id="@ad.Id" class="text-decoration-none">
         <div class="p-1 text-decoration-none">
             <div class="bg-light py-3 row justify-content-center">
                 <div class="col-11 row">
@@ -32,7 +34,8 @@
                 </div>
             </div>
         </div>
+    </a>
     }
 
-    <vc:page-list controller="@controller" action="@action" current-page="@Model.CurrentPage" last-page="Model.LastPage"></vc:page-list>
+    <vc:page-list controller="@controller" action="@action" current-page="@Model.CurrentPage" last-page="Model.LastPage" pageico-size="@pageicoSize"></vc:page-list>
 </div>

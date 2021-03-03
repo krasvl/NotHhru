@@ -3,10 +3,11 @@
 @{
     string controller = Model.Controller;
     string action = Model.Action;
+    int pageicoSize = ViewBag.pageicoSize;
 }
 
 <div class="row justify-content-center">
-    <div class="col-7 row justify-content-center">
+    <div class="col-@pageicoSize row justify-content-center">
         @if (Model.LastPage < 9)
         {
             for (int i = 1; i <= Model.LastPage; i++)

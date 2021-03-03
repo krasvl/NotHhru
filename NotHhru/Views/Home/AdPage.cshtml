@@ -1,0 +1,26 @@
+﻿@model Ad
+
+<div class="row justify-content-center">
+    <div class="row col-10 bg-light p-4">
+        <div class="col-8">
+            <h3 class=" text-dark">@Model.Name</h3>
+            <h4 class="py-2 text-success">@Model.Salary руб.</h4>
+            <h5 class=" text-dark">@Model.WorkType.Name</h5>
+            <div class="py-2">@Model.Description</div>
+            <h6 class="py-2 text-success">@Model.Date.ToLongDateString()</h6>
+        </div>
+        <div class="col-4 text-center">
+            <img src="@Model.Company.Img" class="rounded-circle" style="width:250px;height:250px;"/>
+            <a asp-controller="Home" asp-action="CompanyPage" asp-route-id="@Model.Company.Id" class="link-success">
+                <h5 class="py-2">@Model.Company.Name</h5>
+            </a>
+            <div class="d-flex justify-content-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                </svg>
+                <h5 class="py-2 text-dark">@Model.Region.Name</h5>
+            </div>
+        </div>
+    </div>
+</div>
