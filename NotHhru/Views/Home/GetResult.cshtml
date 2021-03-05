@@ -62,8 +62,39 @@
                 <div class="col-4 p-2" style="font-size: 12px">
                     <div class="p-1 bg-light">
                         <div class="row">
-                            <div class="col-5 text-center"><h6 class="text-success">@c.Key</h6></div>
-                            <div class="col-5 text-center text-dark">@c.Value</div>
+                            <div class="col-5 text-center">
+                                <h6 class="text-success">
+                                    @if(c.Key == "workType")
+                                    {
+                                        @:Тип работы
+                                    }
+                                    else if(c.Key == "region")
+                                    {
+                                        @:Регион
+                                    }
+                                    else
+                                    {
+                                        @:Зарплата
+                                    }
+                                </h6>
+                            </div>
+                            <div class="col-5 text-center text-dark">
+                                @if (c.Key != "salary")
+                                {
+                                    @c.Value
+                                }
+                                else
+                                {
+                                    if(c.Value == "0")
+                                    {
+                                        @:Указана
+                                    }
+                                    else
+                                    {
+                                        @:от @c.Value т.руб.
+                                    }
+                                }
+                            </div>
                             <div class="col-2 text-center">
                                 <a asp-controller="Home" asp-action="GetResult" asp-route-deleteCategorie="@c.Key" class="text-decoration-none">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x text-success" viewBox="0 0 16 16">

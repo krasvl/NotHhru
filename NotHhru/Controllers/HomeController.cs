@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NotHhru.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace NotHhru.Controllers
 {
@@ -42,77 +43,104 @@ namespace NotHhru.Controllers
                 db.Companies.Include(c => c.Ads).OrderByDescending(c => c.Ads.Count).ToList()));
         }
 
-        private static string _name;
-        private static int? _workType;
-        private static int? _region;
-        private static int? _salary;
-        private static Dictionary<string, string> categories = new Dictionary<string, string>();
-
         public IActionResult GetResult(string name, int? workType, int? region, int? salary, string deleteCategorie, int countRegions = 5, int currentPage = 1)
         {
-            if(!string.IsNullOrEmpty(deleteCategorie))
+            if (!HttpContext.Session.Keys.Contains("requestName"))
             {
-                categories.Remove(deleteCategorie);
-                if (deleteCategorie == "Тип работы")
-                    _workType = null;
-                if (deleteCategorie == "Регион")
-                    _region = null;
-                if (deleteCategorie == "Зарплата")
-                    _salary = null;
-            }
-
-            if (name != null ) _name = name;
-
-            if (workType != null)
-            {
-                _workType = (int)workType;
-                _name = "";
-                if (categories.ContainsKey("Тип работы")) categories["Тип работы"] = db.WorkTypes.Where(w => w.Id == workType).FirstOrDefault().Name;
-                else categories.Add("Тип работы", db.WorkTypes.Where(w => w.Id == workType).FirstOrDefault().Name);
-            }
-            if (region != null)
-            {
-                _region = (int)region;
-                _name = "";
-                if (categories.ContainsKey("Регион")) categories["Регион"] = db.Regions.Where(r => r.Id == region).FirstOrDefault().Name;
-                else categories.Add("Регион", db.Regions.Where(r => r.Id == region).FirstOrDefault().Name);
-            }
-            if (salary != null)
-            {
-                _salary = salary;
-                _name = "";
-                if (categories.ContainsKey("Зарплата"))
-                {
-                    if(salary == 0)
-                        categories["Зарплата"] = $"Указана";
-                    else
-                        categories["Зарплата"] = $"От {salary} т.р.";
-                }
+                if (name != null)
+                    HttpContext.Session.SetString("requestName", name);
                 else
+                    HttpContext.Session.SetString("requestName", "");
+            }
+            else
+            {
+                if (name != null)
+                    HttpContext.Session.SetString("requestName", name);
+            }
+
+
+            if (!HttpContext.Session.Keys.Contains("categories"))
+                HttpContext.Session.Set<Dictionary<string, string>>("categories", new Dictionary<string, string>() { });
+            else
+            {
+                if(workType != null)
                 {
-                    if (salary == 0)
-                        categories.Add("Зарплата", $"Указана");
+                    HttpContext.Session.SetString("requestName", "");
+                    if (!HttpContext.Session.Get<Dictionary<string, string>>("categories").ContainsKey("workType"))
+                    {
+                        var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                        cat.Add("workType", db.WorkTypes.Where(w => w.Id == workType).FirstOrDefault().Name);
+                        HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+                    }
                     else
-                        categories.Add("Зарплата", $"От {salary} т.р.");
+                    {
+                        var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                        cat["workType"] = db.WorkTypes.Where(w => w.Id == workType).FirstOrDefault().Name;
+                        HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+                    }
+                }
+                if (region != null)
+                {
+                    HttpContext.Session.SetString("requestName", "");
+                    if (!HttpContext.Session.Get<Dictionary<string, string>>("categories").ContainsKey("region"))
+                    {
+                        var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                        cat.Add("region", db.Regions.Where(r => r.Id == region).FirstOrDefault().Name);
+                        HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+                    }
+                    else
+                    {
+                        var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                        cat["region"] = db.Regions.Where(r => r.Id == region).FirstOrDefault().Name;
+                        HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+                    }
+                }
+                if (salary != null)
+                {
+                    HttpContext.Session.SetString("requestName", "");
+                    if (!HttpContext.Session.Get<Dictionary<string, string>>("categories").ContainsKey("salary"))
+                        {
+                            var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                            cat.Add("salary", salary.ToString());
+                            HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+                        }
+                        else
+                        {
+                            var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                            cat["salary"] = salary.ToString();
+                            HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+                        }
                 }
             }
+
+
+            if (!string.IsNullOrEmpty(deleteCategorie))
+            {
+                HttpContext.Session.SetString("requestName", "");
+                var cat = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+                cat.Remove(deleteCategorie);
+                HttpContext.Session.Set<Dictionary<string, string>>("categories", cat);
+            }
+
+            Dictionary<string, string> categories = HttpContext.Session.Get<Dictionary<string, string>>("categories");
+            string requestName = HttpContext.Session.GetString("requestName");
 
             var ads1 = db.Ads
                 .Include(a => a.Company)
                 .Include(a => a.Region)
                 .Include(a => a.WorkType)
-                .Where(a => EF.Functions.Like(a.Name, $"%{_name}%") && 
-                (_region != null ? a.RegionId == _region : true) && 
-                (_workType != null ? a.WorkTypeId == _workType : true) && 
-                (_salary != null ? (int)a.Salary > _salary*1000 : true));
+                .Where(a => EF.Functions.Like(a.Name, $"%{requestName}%") && 
+                (categories.ContainsKey("region") ? a.Region.Name == categories["region"] : true) && 
+                (categories.ContainsKey("workType") ? a.WorkType.Name == categories["workType"] : true) && 
+                (categories.ContainsKey("salary") ? (int)a.Salary > int.Parse(categories["salary"]) *1000 : true));
             var ads2 = db.Ads
                 .Include(a => a.Company)
                 .Include(a => a.Region)
                 .Include(a => a.WorkType)
-                .Where(a => EF.Functions.Like(a.Company.Name, $"%{_name}%") &&
-                (_region != null ? a.RegionId == _region : true) &&
-                (_workType != null ? a.WorkTypeId == _workType : true) &&
-                (_salary != null ? (int)a.Salary > _salary*1000 : true));
+                .Where(a => EF.Functions.Like(a.Company.Name, $"%{requestName}%") &&
+                (categories.ContainsKey("region") ? a.Region.Name == categories["region"] : true) &&
+                (categories.ContainsKey("workType") ? a.WorkType.Name == categories["workType"] : true) &&
+                (categories.ContainsKey("salary") ? (int)a.Salary > int.Parse(categories["salary"]) * 1000 : true));
             var ads = ads1.Concat(ads2);
 
             ViewBag.currentPage = currentPage;
@@ -120,7 +148,8 @@ namespace NotHhru.Controllers
 
             var workTypes = db.WorkTypes.ToList();
             var regions = db.Regions.ToList();
-            var model = new GetResultViewModel(ads, workTypes, regions, categories);
+            var model = new GetResultViewModel(ads, workTypes, regions, HttpContext.Session.Get<Dictionary<string, string>>("categories"));
+
             return View(model);
         }
 
